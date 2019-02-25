@@ -17,9 +17,9 @@ import (
 )
 
 var (
-	urls          = make(chan *url.URL, 1000)
-	manager       = make(chan *url.URL, 1000)
-	paragraphChan = make(chan *paragraph, 1000)
+	urls          = make(chan *url.URL, 100000)
+	manager       = make(chan *url.URL, 100000)
+	paragraphChan = make(chan *paragraph, 100000)
 	peg           = regexp.MustCompile("[\u0600-\u06FF\u0698\u067E\u0686\u06AF]+")
 	words         = make(map[string]int)
 	lock          = sync.Mutex{}
