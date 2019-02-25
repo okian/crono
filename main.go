@@ -67,18 +67,24 @@ func main() {
 	// }
 	// urls <- u
 	//
-	u1, err := url.Parse("http://gadgetnews.net")
-	if err != nil {
-		log.Fatal(err)
-	}
-	urls <- u1
 
-	u2, err := url.Parse("http://www.irna.ir/")
-	if err != nil {
-		log.Fatal(err)
+	webs := []string{
+		"http://gadgetnews.net",
+		"http://www.irna.ir/",
+		"https://www.farsnews.com/",
+		"https://dictionary.abadis.ir/",
+		"https://www.khabaronline.ir/",
+		"https://www.varzesh3.com/",
+		"https://www.aparat.com/",
+
 	}
-	urls <- u2
-	fmt.Println("sss")
+	for _, v := range webs {
+		u,err :=url.Parse(v)
+		if err != nil {
+			log.Fatal(err)
+		}
+		urls <- u
+	}
 	wait()
 	cl()
 	fmt.Println("sss")
