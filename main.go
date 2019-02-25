@@ -88,6 +88,7 @@ func main() {
 		fmt.Println(fmt.Sprintf("%10s-%d",k,v))
 	}
 	fmt.Println("len: ", len(words))
+	fmt.Println("len: ", len(visited))
 	lock.Unlock()
 	time.Sleep(time.Second)
 }
@@ -107,7 +108,6 @@ func (j *paragraph) Hash() string {
 }
 
 func worker(ctx context.Context, urls chan *url.URL) {
-C:
 	for {
 		select {
 		case <-ctx.Done():
@@ -117,10 +117,12 @@ C:
 			c.OnHTML("a[href]", func(e *colly.HTMLElement) {
 				l, err := url.Parse(e.Request.AbsoluteURL(e.Attr("href")))
 				if err == nil {
+					vlock.Lock()
 					if _,ok := visited[l.String()]; !ok {
 						visited[l.String()] = true
 						urls <- l
 					}
+					vlock.Unlock()
 				}
 			})
 			c.OnHTML("p", func(e *colly.HTMLElement) {
