@@ -13,7 +13,6 @@ import (
 	`os/signal`
 	`regexp`
 	`sort`
-	`strings`
 	`sync`
 	`syscall`
 	`time`
@@ -108,16 +107,16 @@ func main() {
 	fmt.Println("len: ", len(visited))
 	lock.Unlock()
 
-	f,err :=os.Create("words.csv")
+	f, err := os.Create("words.csv")
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer f.Close()
-	wr:= csv.NewWriter(f)
+	wr := csv.NewWriter(f)
 	defer wr.Flush()
 
 	for _, v := range ws {
-		err := wr.Write([]string{fmt.Sprint(v.c),v.w})
+		err := wr.Write([]string{fmt.Sprint(v.c), v.w})
 		if err != nil {
 			log.Fatal(err)
 		}
