@@ -23,6 +23,9 @@ var (
 	peg = regexp.MustCompile("[\u0600-\u06FF\u0698\u067E\u0686\u06AF]+")
 	words = make(map[string]int)
 	lock = sync.Mutex{}
+
+	visited = make(map[string]bool)
+	vlock = sync.Mutex{}
 )
 
 func wait() {
@@ -50,7 +53,6 @@ func extractor(ctx context.Context) {
 		}
 	}
 }
-
 func main() {
 	ctx,cl :=context.WithCancel( context.Background())
 	for i := 0; i < 30; i++ {
@@ -105,6 +107,7 @@ func (j *paragraph) Hash() string {
 }
 
 func worker(ctx context.Context, urls chan *url.URL) {
+C:
 	for {
 		select {
 		case <-ctx.Done():
@@ -114,7 +117,10 @@ func worker(ctx context.Context, urls chan *url.URL) {
 			c.OnHTML("a[href]", func(e *colly.HTMLElement) {
 				l, err := url.Parse(e.Request.AbsoluteURL(e.Attr("href")))
 				if err == nil {
-					urls <- l
+					if _,ok := visited[l.String()]; !ok {
+						visited[l.String()] = true
+						urls <- l
+					}
 				}
 			})
 			c.OnHTML("p", func(e *colly.HTMLElement) {
