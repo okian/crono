@@ -3,6 +3,7 @@ package main
 import (
 	`context`
 	`crypto/sha1`
+	`encoding/csv`
 	"fmt"
 	"github.com/gocolly/colly"
 	"github.com/sirupsen/logrus"
@@ -11,6 +12,8 @@ import (
 	`os`
 	`os/signal`
 	`regexp`
+	`sort`
+	`strings`
 	`sync`
 	`syscall`
 	`time`
@@ -89,13 +92,42 @@ func main() {
 	fmt.Println("sss")
 
 	lock.Lock()
+	ws := make([]word, 0)
+
 	for k, v := range words {
-		fmt.Println(fmt.Sprintf("%10s-%d", k, v))
+		ws = append(ws, word{
+			w: k,
+			c: v,
+		})
 	}
+
+	sort.SliceStable(ws, func(i, j int) bool {
+		return ws[i].c > ws[i].c
+	})
 	fmt.Println("len: ", len(words))
 	fmt.Println("len: ", len(visited))
 	lock.Unlock()
+
+	f,err :=os.Create("words.csv")
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer f.Close()
+	wr:= csv.NewWriter(f)
+	defer wr.Flush()
+
+	for _, v := range ws {
+		err := wr.Write([]string{fmt.Sprint(v.c),v.w})
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 	time.Sleep(time.Second)
+}
+
+type word struct {
+	w string
+	c int
 }
 
 type paragraph struct {
