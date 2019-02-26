@@ -121,6 +121,10 @@ func main() {
 		"https://www.khabaronline.ir/",
 		"https://www.varzesh3.com/",
 		"https://www.aparat.com/",
+		"http://www.entekhab.ir/",
+		"https://fa.wikipedia.org/wiki/%D8%B5%D9%81%D8%AD%D9%87%D9%94_%D8%A7%D8%B5%D9%84%DB%8C",
+		"https://fa.wiktionary.org/wiki/%D8%B5%D9%81%D8%AD%D9%87%D9%94_%D8%A7%D8%B5%D9%84%DB%8C",
+		"https://www.vajehyab.com/?q=%D8%A2%D8%A8",
 	}
 	for _, v := range webs {
 		u, err := url.Parse(v)
