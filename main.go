@@ -56,6 +56,10 @@ func extractor(ctx context.Context) {
 			p.text = strings.Replace(p.text, "ِ", " ", -1)
 			p.text = strings.Replace(p.text, "ٰ", " ", -1)
 			p.text = strings.Replace(p.text, "٠", " ", -1)
+			p.text = strings.Replace(p.text, "؛", " ", -1)
+			p.text = strings.Replace(p.text, "٬", " ", -1)
+			p.text = strings.Replace(p.text, "؛", " ", -1)
+			p.text = strings.Replace(p.text, "؛", " ", -1)
 
 			p.text = strings.Replace(p.text, "۰", " ", -1)
 			p.text = strings.Replace(p.text, "۱", " ", -1)
@@ -67,6 +71,17 @@ func extractor(ctx context.Context) {
 			p.text = strings.Replace(p.text, "۷", " ", -1)
 			p.text = strings.Replace(p.text, "۸", " ", -1)
 			p.text = strings.Replace(p.text, "۹", " ", -1)
+
+			p.text = strings.Replace(p.text, "0", " ", -1)
+			p.text = strings.Replace(p.text, "1", " ", -1)
+			p.text = strings.Replace(p.text, "2", " ", -1)
+			p.text = strings.Replace(p.text, "3", " ", -1)
+			p.text = strings.Replace(p.text, "4", " ", -1)
+			p.text = strings.Replace(p.text, "5", " ", -1)
+			p.text = strings.Replace(p.text, "6", " ", -1)
+			p.text = strings.Replace(p.text, "7", " ", -1)
+			p.text = strings.Replace(p.text, "8", " ", -1)
+			p.text = strings.Replace(p.text, "9", " ", -1)
 
 			p.text = strings.Replace(p.text, "؟", " ", -1)
 			p.text = strings.Replace(p.text, "!", " ", -1)
