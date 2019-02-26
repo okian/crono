@@ -190,7 +190,15 @@ func (j *paragraph) Hash() string {
 	sh := sha1.New()
 	return fmt.Sprintf("%x", sh.Sum([]byte(j.url.Host)))
 }
-
+func checkWiki(u *url.URL) bool {
+	if strings.Contains(u.String(),".wik") {
+		if u.Host == "fa.wikiperdia.org" || u.Host == "fa.wiktionary.org"  {
+			return true
+		}
+		return false
+	}
+	return true
+}
 func worker(ctx context.Context, urls chan *url.URL) {
 	for {
 		select {
@@ -198,6 +206,9 @@ func worker(ctx context.Context, urls chan *url.URL) {
 			break
 		case u := <-urls:
 			time.Sleep(time.Millisecond * 250)
+			if !checkWiki(u) {
+				continue
+			}
 			c := colly.NewCollector()
 			c.OnHTML("a[href]", func(e *colly.HTMLElement) {
 				l, err := url.Parse(e.Request.AbsoluteURL(e.Attr("href")))
