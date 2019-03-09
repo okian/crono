@@ -314,9 +314,9 @@ func worker(ctx context.Context, urls chan *url.URL) {
 	})
 	err := c.Limit(&colly.LimitRule{
 		DomainGlob:  "*",
-		Delay:       time.Millisecond * 70,
+		Delay:       time.Millisecond * 500,
 		RandomDelay: time.Second,
-		Parallelism: 5,
+		Parallelism: 2,
 	})
 	if err != nil {
 		log.Fatal(err)
