@@ -23,7 +23,7 @@ import (
 
 var (
 	urls          = make(chan *url.URL)
-	paragraphChan = make(chan *paragraph, 100000)
+	paragraphChan = make(chan *paragraph, 1000)
 	peg           = regexp.MustCompile("[\u0600-\u06FF\u0698\u067E\u0686\u06AF]+")
 	space         = regexp.MustCompile(`(\s+)`)
 	words         = make(map[string]int)
@@ -169,7 +169,6 @@ func main() {
 	})
 	fmt.Println("len: ", len(words))
 	fmt.Println("len: ", len(visited))
-	lock.Unlock()
 
 	f, err := os.Create("words.csv")
 	if err != nil {
@@ -186,6 +185,7 @@ func main() {
 		}
 	}
 	time.Sleep(time.Second)
+
 }
 
 type word struct {
@@ -289,7 +289,7 @@ func worker(ctx context.Context, urls chan *url.URL) {
 		DomainGlob:  "*",
 		Delay:       time.Millisecond * 150,
 		RandomDelay: time.Second * 2,
-		Parallelism: 10,
+		Parallelism: 3,
 	})
 	if err != nil {
 		log.Fatal(err)

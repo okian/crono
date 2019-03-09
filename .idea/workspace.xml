@@ -17,8 +17,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/main.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="581">
-                  <caret line="290" column="23" selection-start-line="290" selection-start-column="23" selection-end-line="290" selection-end-column="23" />
+                <state relative-caret-position="431">
+                  <caret line="187" column="4" selection-start-line="187" selection-start-column="4" selection-end-line="187" selection-end-column="4" />
                 </state>
               </provider>
             </entry>
@@ -35,8 +35,8 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file:///usr/lib/go/src/net/http/transport.go">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="247">
-                  <caret line="344" column="5" selection-start-line="344" selection-start-column="5" selection-end-line="344" selection-end-column="5" />
+                <state relative-caret-position="238">
+                  <caret line="178" column="4" selection-start-line="178" selection-start-column="4" selection-end-line="178" selection-end-column="4" />
                 </state>
               </provider>
             </entry>
@@ -332,13 +332,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file:///usr/lib/go/src/net/http/transport.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="344" column="5" selection-start-line="344" selection-start-column="5" selection-end-line="344" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file:///usr/lib/go/src/net/dial.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="247">
@@ -346,10 +339,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file:///usr/lib/go/src/net/http/transport.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="178" column="4" selection-start-line="178" selection-start-column="4" selection-end-line="178" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="581">
-          <caret line="290" column="23" selection-start-line="290" selection-start-column="23" selection-end-line="290" selection-end-column="23" />
+        <state relative-caret-position="431">
+          <caret line="187" column="4" selection-start-line="187" selection-start-column="4" selection-end-line="187" selection-end-column="4" />
         </state>
       </provider>
     </entry>
