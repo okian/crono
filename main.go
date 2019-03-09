@@ -218,6 +218,139 @@ func checkWiki(u *url.URL) bool {
 }
 
 func worker(ctx context.Context, urls chan *url.URL) {
+	c := colly.NewCollector(func(x *colly.Collector) {
+		x.AllowedDomains = []string{
+			"gadgetnews.net",
+			"www.irna.ir",
+			"www.farsnews.com",
+			"dictionary.abadis.ir",
+			"www.khabaronline.ir",
+			"www.varzesh3.com",
+			"www.aparat.com",
+			"www.entekhab.ir",
+			"www.bbc.com",
+			"fa.wikipedia.org",
+			"fa.wiktionary.org",
+			"www.vajehyab.com",
+			"www.hidoctor.ir",
+			"tebna.ir",
+			"www.sid.ir",
+			"digiato.com",
+			"zoomlife.ir",
+			"www.zoomit.ir",
+			"www.chetor.com",
+			"www.ghesticlub.com",
+			"www.radiofarda.com",
+		}
+		x.URLFilters = []*regexp.Regexp{
+			ptmaker("gadgetnews.net"),
+			ptmaker("www.irna.ir"),
+			ptmaker("www.isna.ir"),
+			ptmaker("www.ilna.ir"),
+			ptmaker("www.digikala.com"),
+			ptmaker("www.farsnews.com"),
+			ptmaker("dictionary.abadis.ir"),
+			ptmaker("www.khabaronline.ir"),
+			ptmaker("www.varzesh3.com"),
+			ptmaker("www.aparat.com"),
+			ptmaker("www.entekhab.ir"),
+			ptmaker("www.bbc.com/persian/"),
+			ptmaker("fa.wikipedia.org/wiki/"),
+			ptmaker("fa.wiktionary.org/wiki/"),
+			ptmaker("www.vajehyab.com/"),
+			ptmaker("www.hidoctor.ir"),
+			ptmaker("tebna.ir"),
+			ptmaker("www.sid.ir"),
+			ptmaker("digiato.com"),
+			ptmaker("zoomlife.ir"),
+			ptmaker("www.zoomit.ir"),
+			ptmaker("www.chetor.com"),
+			ptmaker("www.ghesticlub.com"),
+			ptmaker("www.radiofarda.com"),
+		}
+		x.AllowURLRevisit = false
+
+	})
+	c.WithTransport(&http.Transport{
+		DialContext: (&net.Dialer{
+			Timeout:   10 * time.Second,
+			KeepAlive: 10 * time.Second,
+			DualStack: true,
+		}).DialContext,
+		MaxIdleConns:          20,
+		IdleConnTimeout:       90 * time.Second,
+		TLSHandshakeTimeout:   10 * time.Second,
+		ExpectContinueTimeout: 1 * time.Second,
+	})
+	err := c.Limit(&colly.LimitRule{
+		DomainGlob:  "*",
+		Delay:       time.Millisecond * 150,
+		RandomDelay: time.Second * 2,
+		Parallelism: 3,
+	})
+	if err != nil {
+		log.Fatal(err)
+	}
+	c.OnHTML("p", func(e *colly.HTMLElement) {
+		paragraphChan <- &paragraph{
+			url:  e.Request.URL,
+			text: e.Text,
+		}
+	})
+
+	c.OnHTML("h1", func(e *colly.HTMLElement) {
+		paragraphChan <- &paragraph{
+			url:  e.Request.URL,
+			text: e.Text,
+		}
+	})
+
+	c.OnHTML("h2", func(e *colly.HTMLElement) {
+		paragraphChan <- &paragraph{
+			url:  e.Request.URL,
+			text: e.Text,
+		}
+	})
+
+	c.OnHTML("h3", func(e *colly.HTMLElement) {
+		paragraphChan <- &paragraph{
+			url:  e.Request.URL,
+			text: e.Text,
+		}
+	})
+
+	c.OnHTML("h4", func(e *colly.HTMLElement) {
+		paragraphChan <- &paragraph{
+			url:  e.Request.URL,
+			text: e.Text,
+		}
+	})
+
+	c.OnHTML("h5", func(e *colly.HTMLElement) {
+		paragraphChan <- &paragraph{
+			url:  e.Request.URL,
+			text: e.Text,
+		}
+	})
+
+	c.OnHTML("h6", func(e *colly.HTMLElement) {
+		paragraphChan <- &paragraph{
+			url:  e.Request.URL,
+			text: e.Text,
+		}
+	})
+	c.OnHTML("a[href]", func(e *colly.HTMLElement) {
+		l, err := url.Parse(e.Request.AbsoluteURL(e.Attr("href")))
+		if err == nil {
+			vlock.Lock()
+			if _, ok := visited[l.String()]; !ok {
+				visited[l.String()] = true
+				urls <- l
+			}
+			vlock.Unlock()
+		}
+	})
+
 	for {
 		select {
 		case <-ctx.Done():
@@ -227,141 +360,9 @@ func worker(ctx context.Context, urls chan *url.URL) {
 			if !checkWiki(u) {
 				continue
 			}
-			c := colly.NewCollector(func(x *colly.Collector) {
-				x.AllowedDomains = []string{
-					"gadgetnews.net",
-					"www.irna.ir",
-					"www.farsnews.com",
-					"dictionary.abadis.ir",
-					"www.khabaronline.ir",
-					"www.varzesh3.com",
-					"www.aparat.com",
-					"www.entekhab.ir",
-					"www.bbc.com",
-					"fa.wikipedia.org",
-					"fa.wiktionary.org",
-					"www.vajehyab.com",
-					"www.hidoctor.ir",
-					"tebna.ir",
-					"www.sid.ir",
-					"digiato.com",
-					"zoomlife.ir",
-					"www.zoomit.ir",
-					"www.chetor.com",
-					"www.ghesticlub.com",
-					"www.radiofarda.com",
-				}
-				x.URLFilters = []*regexp.Regexp{
-					ptmaker("gadgetnews.net"),
-					ptmaker("www.irna.ir"),
-					ptmaker("www.isna.ir"),
-					ptmaker("www.ilna.ir"),
-					ptmaker("www.digikala.com"),
-					ptmaker("www.farsnews.com"),
-					ptmaker("dictionary.abadis.ir"),
-					ptmaker("www.khabaronline.ir"),
-					ptmaker("www.varzesh3.com"),
-					ptmaker("www.aparat.com"),
-					ptmaker("www.entekhab.ir"),
-					ptmaker("www.bbc.com/persian/"),
-					ptmaker("fa.wikipedia.org/wiki/"),
-					ptmaker("fa.wiktionary.org/wiki/"),
-					ptmaker("www.vajehyab.com/"),
-					ptmaker("www.hidoctor.ir"),
-					ptmaker("tebna.ir"),
-					ptmaker("www.sid.ir"),
-					ptmaker("digiato.com"),
-					ptmaker("zoomlife.ir"),
-					ptmaker("www.zoomit.ir"),
-					ptmaker("www.chetor.com"),
-					ptmaker("www.ghesticlub.com"),
-					ptmaker("www.radiofarda.com"),
-				}
-				x.AllowURLRevisit = false
-
-			})
-			c.WithTransport(&http.Transport{
-				DialContext: (&net.Dialer{
-					Timeout:   10 * time.Second,
-					KeepAlive: 10 * time.Second,
-					DualStack: true,
-				}).DialContext,
-				MaxIdleConns:          100,
-				IdleConnTimeout:       90 * time.Second,
-				TLSHandshakeTimeout:   10 * time.Second,
-				ExpectContinueTimeout: 1 * time.Second,
-			})
-			err := c.Limit(&colly.LimitRule{
-				DomainGlob:  "*",
-				Delay:       time.Millisecond * 150,
-				RandomDelay: time.Second * 2,
-				Parallelism: 3,
-			})
-			if err != nil {
-				log.Fatal(err)
-			}
-			c.OnHTML("p", func(e *colly.HTMLElement) {
-				paragraphChan <- &paragraph{
-					url:  e.Request.URL,
-					text: e.Text,
-				}
-			})
-
-			c.OnHTML("h1", func(e *colly.HTMLElement) {
-				paragraphChan <- &paragraph{
-					url:  e.Request.URL,
-					text: e.Text,
-				}
-			})
-
-			c.OnHTML("h2", func(e *colly.HTMLElement) {
-				paragraphChan <- &paragraph{
-					url:  e.Request.URL,
-					text: e.Text,
-				}
-			})
-
-			c.OnHTML("h3", func(e *colly.HTMLElement) {
-				paragraphChan <- &paragraph{
-					url:  e.Request.URL,
-					text: e.Text,
-				}
-			})
-
-			c.OnHTML("h4", func(e *colly.HTMLElement) {
-				paragraphChan <- &paragraph{
-					url:  e.Request.URL,
-					text: e.Text,
-				}
-			})
-
-			c.OnHTML("h5", func(e *colly.HTMLElement) {
-				paragraphChan <- &paragraph{
-					url:  e.Request.URL,
-					text: e.Text,
-				}
-			})
-
-			c.OnHTML("h6", func(e *colly.HTMLElement) {
-				paragraphChan <- &paragraph{
-					url:  e.Request.URL,
-					text: e.Text,
-				}
-			})
-			c.OnHTML("a[href]", func(e *colly.HTMLElement) {
-				l, err := url.Parse(e.Request.AbsoluteURL(e.Attr("href")))
-				if err == nil {
-					vlock.Lock()
-					if _, ok := visited[l.String()]; !ok {
-						visited[l.String()] = true
-						urls <- l
-					}
-					vlock.Unlock()
-				}
-			})
 
 			fmt.Println("VISITING: ", u.String())
-			err = c.Visit(u.String())
+			err := c.Visit(u.String())
 			if err != nil {
 				logrus.Error("VISIT: ", u.String(), err)
 			}
