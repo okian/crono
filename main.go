@@ -8,6 +8,8 @@ import (
 	"github.com/gocolly/colly"
 	"github.com/sirupsen/logrus"
 	`log`
+	"net"
+	"net/http"
 	`net/url`
 	`os`
 	`os/signal`
@@ -20,8 +22,7 @@ import (
 )
 
 var (
-	urls          = make(chan *url.URL, 100000)
-	manager       = make(chan *url.URL, 100000)
+	urls          = make(chan *url.URL)
 	paragraphChan = make(chan *paragraph, 100000)
 	peg           = regexp.MustCompile("[\u0600-\u06FF\u0698\u067E\u0686\u06AF]+")
 	space         = regexp.MustCompile(`(\s+)`)
@@ -278,6 +279,17 @@ func worker(ctx context.Context, urls chan *url.URL) {
 				}
 				x.AllowURLRevisit = false
 
+			})
+			c.WithTransport(&http.Transport{
+				DialContext: (&net.Dialer{
+					Timeout:   10 * time.Second,
+					KeepAlive: 10 * time.Second,
+					DualStack: true,
+				}).DialContext,
+				MaxIdleConns:          100,
+				IdleConnTimeout:       90 * time.Second,
+				TLSHandshakeTimeout:   10 * time.Second,
+				ExpectContinueTimeout: 1 * time.Second,
 			})
 			err := c.Limit(&colly.LimitRule{
 				DomainGlob:  "*",
