@@ -106,7 +106,7 @@ func extractor(ctx context.Context) {
 }
 
 func ptmaker(s string) *regexp.Regexp {
-	return regexp.MustCompile(fmt.Sprintf(`https?://.*%s.*`, s))
+	return regexp.MustCompile(fmt.Sprintf("https?://.*%s.*", s))
 }
 
 func main() {
