@@ -114,7 +114,7 @@ func main() {
 	for i := 0; i < 20; i++ {
 		go worker(ctx, urls)
 	}
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 150; i++ {
 		go extractor(ctx)
 	}
 
@@ -307,16 +307,16 @@ func worker(ctx context.Context, urls chan *url.URL) {
 			DualStack: true,
 		}).DialContext,
 		DisableKeepAlives: true,
-		MaxIdleConns:          20,
+		MaxIdleConns:          30,
 		IdleConnTimeout:       90 * time.Second,
 		TLSHandshakeTimeout:   10 * time.Second,
 		ExpectContinueTimeout: 1 * time.Second,
 	})
 	err := c.Limit(&colly.LimitRule{
 		DomainGlob:  "*",
-		Delay:       time.Millisecond * 150,
-		RandomDelay: time.Second * 2,
-		Parallelism: 3,
+		Delay:       time.Millisecond * 70,
+		RandomDelay: time.Second,
+		Parallelism: 5,
 	})
 	if err != nil {
 		log.Fatal(err)
@@ -386,7 +386,6 @@ func worker(ctx context.Context, urls chan *url.URL) {
 		case <-ctx.Done():
 			break
 		case u := <-urls:
-			time.Sleep(time.Millisecond * 250)
 			if !checkWiki(u) {
 				continue
 			}
