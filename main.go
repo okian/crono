@@ -108,8 +108,6 @@ func ptmaker(s string) *regexp.Regexp {
 	return regexp.MustCompile(fmt.Sprintf("https?://%s.*", s))
 }
 
-
-
 func main() {
 	ctx, cl := context.WithCancel(context.Background())
 	for i := 0; i < 20; i++ {
@@ -282,8 +280,9 @@ func worker(ctx context.Context, urls chan *url.URL) {
 
 			})
 			err := c.Limit(&colly.LimitRule{
-				Delay:time.Millisecond * 150,
-				RandomDelay:time.Second * 2,
+				DomainGlob:  "*",
+				Delay:       time.Millisecond * 150,
+				RandomDelay: time.Second * 2,
 				Parallelism: 3,
 			})
 			if err != nil {
