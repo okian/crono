@@ -121,21 +121,26 @@ func main() {
 
 	webs := []string{
 		"http://gadgetnews.net",
-		"http://www.irna.ir/",
-		"https://www.farsnews.com/",
-		"https://dictionary.abadis.ir/",
-		"https://www.khabaronline.ir/",
-		"https://www.varzesh3.com/",
-		"https://www.aparat.com/",
-		"http://www.entekhab.ir/",
-		"http://www.bbc.com/persian",
-		"https://fa.wikipedia.org/wiki/",
-		"https://fa.wiktionary.org/wiki/",
-		"https://www.vajehyab.com/?q=%D8%A2%D8%A8",
-		"www.isna.ir",
-		"www.ilna.ir",
-		"www.digikala.com",
-		"www.farsnews.com",
+		"http://www.irna.ir",
+		"http://www.farsnews.com",
+		"http://dictionary.abadis.ir",
+		"http://www.khabaronline.ir",
+		"http://www.varzesh3.com",
+		"http://www.aparat.com",
+		"http://www.entekhab.ir",
+		"http://www.bbc.com",
+		"http://fa.wikipedia.org",
+		"http://fa.wiktionary.org",
+		"http://www.vajehyab.com",
+		"http://www.hidoctor.ir",
+		"http://tebna.ir",
+		"http://www.sid.ir",
+		"http://digiato.com",
+		"http://zoomlife.ir",
+		"http://www.zoomit.ir",
+		"http://www.chetor.com",
+		"http://www.ghesticlub.com",
+		"http://www.radiofarda.com",
 	}
 
 	for _, v := range webs {
@@ -237,6 +242,15 @@ func worker(ctx context.Context, urls chan *url.URL) {
 					"fa.wikipedia.org",
 					"fa.wiktionary.org",
 					"www.vajehyab.com",
+					"www.hidoctor.ir",
+					"tebna.ir",
+					"www.sid.ir",
+					"digiato.com",
+					"zoomlife.ir",
+					"www.zoomit.ir",
+					"www.chetor.com",
+					"www.ghesticlub.com",
+					"www.radiofarda.com",
 				}
 				x.URLFilters = []*regexp.Regexp{
 					ptmaker("gadgetnews.net"),
@@ -254,6 +268,15 @@ func worker(ctx context.Context, urls chan *url.URL) {
 					ptmaker("fa.wikipedia.org/wiki/"),
 					ptmaker("fa.wiktionary.org/wiki/"),
 					ptmaker("www.vajehyab.com/"),
+					ptmaker("www.hidoctor.ir"),
+					ptmaker("tebna.ir"),
+					ptmaker("www.sid.ir"),
+					ptmaker("digiato.com"),
+					ptmaker("zoomlife.ir"),
+					ptmaker("www.zoomit.ir"),
+					ptmaker("www.chetor.com"),
+					ptmaker("www.ghesticlub.com"),
+					ptmaker("www.radiofarda.com"),
 				}
 				x.AllowURLRevisit = false
 
@@ -327,7 +350,7 @@ func worker(ctx context.Context, urls chan *url.URL) {
 			})
 
 			fmt.Println("VISITING: ", u.String())
-			err := c.Visit(u.String())
+			err = c.Visit(u.String())
 			if err != nil {
 				logrus.Error("VISIT: ", u.String(), err)
 			}
